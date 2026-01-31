@@ -7,9 +7,12 @@ import math
 import os
 from datetime import datetime
 from flask_mail import Mail, Message  # <-- Import Mail and Message
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__, template_folder='../frontend', static_folder='../static') # <-- Point to static folder
-app.secret_key = 'your_secret_key_here_change_in_production'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'change_this_in_production')
 
 # --- Flask-Mail Configuration ---
 # IMPORTANT: Use environment variables for sensitive data.
@@ -145,7 +148,7 @@ def signup_donor():
         except sqlite3.IntegrityError:
             conn.close()
             return "Email already exists!", 400
-    return render_template('signup_donor.html')
+    return render_template('signup_donor.html', google_maps_api_key=os.environ.get('GOOGLE_MAPS_API_KEY', ''))
 
 
 @app.route('/signup_receiver', methods=['GET', 'POST'])
@@ -170,7 +173,7 @@ def signup_receiver():
         except sqlite3.IntegrityError:
             conn.close()
             return "Email already exists!", 400
-    return render_template('signup_receiver.html')
+    return render_template('signup_receiver.html', google_maps_api_key=os.environ.get('GOOGLE_MAPS_API_KEY', ''))
 
 
 @app.route('/signup_hospital', methods=['GET', 'POST'])
@@ -195,7 +198,7 @@ def signup_hospital():
         except sqlite3.IntegrityError:
             conn.close()
             return "Email or Hospital ID already exists!", 400
-    return render_template('signup_hospital.html')
+    return render_template('signup_hospital.html', google_maps_api_key=os.environ.get('GOOGLE_MAPS_API_KEY', ''))
 
 
 @app.route('/login', methods=['GET', 'POST'])
