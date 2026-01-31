@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .card p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: #f5576c;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #f5576c;
+            color: white;
+            transform: scale(1.05);
+        }
+        .donor-card {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .receiver-card {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        .hospital-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        .login-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #eee;
+        }
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .login-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Logo Styles */
+        .logo {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .header-with-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center header on this page */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header-with-logo">
+            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Arogya Deeksha Logo" class="logo">
+            <h1>🩸 Blood Donation Management System</h1>
+        </div>
+        <p class="subtitle">Arogya Deeksha: Save lives by donating blood. Join our community today!</p>
+        
+        <div class="card-container">
+            <div class="card donor-card">
+                <h3>💉 Donor</h3>
+                <p>Register as a blood donor and help save lives</p>
+                <a href="/signup_donor" class="btn">Sign Up as Donor</a>
+            </div>
+            
+            <div class="card receiver-card">
+                <h3>🩺 Receiver</h3>
+                <p>Request blood when you need it most</p>
+                <a href="/signup_receiver" class="btn">Sign Up as Receiver</a>
+            </div>
+            
+            <div class="card hospital-card">
+                <h3>🏥 Hospital</h3>
+                <p>Manage blood bank and emergency requests</p>
+                <a href="/signup_hospital" class="btn">Sign Up as Hospital</a>
+            </div>
+        </div>
+        
+        <div class="login-section">
+            <p style="color: #666; margin-bottom: 20px;">Already have an account?</p>
+            <a href="/login" class="login-btn">Login Here</a>
+        </div>
+    </div>
+</body>
+</html>

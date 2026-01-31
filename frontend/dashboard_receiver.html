@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiver Dashboard - Arogya Deeksha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .navbar h1 {
+            color: #330867;
+            font-size: 1.5em;
+        }
+        .logout-btn {
+            padding: 10px 25px;
+            background: #330867;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: transform 0.3s;
+        }
+        .logout-btn:hover {
+            transform: scale(1.05);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .welcome {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .welcome h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .section h3 {
+            color: #330867;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .donors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .donor-card {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .donor-card:hover {
+            transform: translateY(-5px);
+        }
+        .donor-info {
+            margin-bottom: 15px;
+        }
+        .donor-info h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        .info-label {
+            opacity: 0.9;
+        }
+        .info-value {
+            font-weight: bold;
+        }
+        .blood-badge {
+            background: white;
+            color: #330867;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .distance-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+        .request-btn {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            color: #330867;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .request-btn:hover {
+            background: #fee140;
+            transform: scale(1.05);
+        }
+        .no-donors {
+            text-align: center;
+            color: #666;
+            padding: 50px;
+            font-style: italic;
+        }
+
+        /* Logo Styles */
+        .logo {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .header-with-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Filter Button Styles */
+        .filter-btn, .distance-btn {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .distance-btn:hover {
+            background-color: #eee;
+        }
+        .filter-btn.active, .distance-btn.active {
+            background-color: #330867;
+            color: white;
+            border-color: #330867;
+        }
+        .distance-apply-btn {
+            padding: 12px 15px;
+            background: #330867;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="header-with-logo">
+            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Arogya Deeksha Logo" class="logo">
+            <h1>🩺 Receiver Dashboard</h1>
+        </div>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+    
+    <div class="container">
+        <div class="welcome">
+            <h2>Welcome, {{ receiver['name'] }}! 👋</h2>
+            <p style="color: #666;">Hospital: <strong>{{ receiver['hospital_name'] }}</strong> | Contact: <strong>{{ receiver['contact'] }}</strong></p>
+        </div>
+        
+        <div class="section">
+            <h3>🩸 Available Donors (Sorted by Distance)</h3>
+            
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 15px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <input type="text" id="bloodGroupSearch" placeholder="🔍 Search by Blood Group (e.g., A+, B-, O+)" 
+                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em;">
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="filterBloodGroup('all')" class="filter-btn active" data-group="all">All</button>
+                        <button onclick="filterBloodGroup('A+')" class="filter-btn">A+</button>
+                        <button onclick="filterBloodGroup('A-')" class="filter-btn">A-</button>
+                        <button onclick="filterBloodGroup('B+')" class="filter-btn">B+</button>
+                        <button onclick="filterBloodGroup('B-')" class="filter-btn">B-</button>
+                        <button onclick="filterBloodGroup('AB+')" class="filter-btn">AB+</button>
+                        <button onclick="filterBloodGroup('AB-')" class="filter-btn">AB-</button>
+                        <button onclick="filterBloodGroup('O+')" class="filter-btn">O+</button>
+                        <button onclick="filterBloodGroup('O-')" class="filter-btn">O-</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; display: flex; gap: 10px; align-items: center;">
+                        <label for="distanceInput" style="font-weight: 500; white-space: nowrap;">📍 Distance:</label>
+                        <input type="number" id="distanceInput" placeholder="Enter km (e.g., 10, 20)" 
+                               min="0" step="1"
+                               style="flex: 1; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em;">
+                        <button onclick="applyDistanceFilter()" class="distance-apply-btn">Apply</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="filterDistance(999999)" class="distance-btn active" data-distance="999999">All</button>
+                        <button onclick="filterDistance(5)" class="distance-btn" data-distance="5">5 km</button>
+                        <button onclick="filterDistance(10)" class="distance-btn" data-distance="10">10 km</button>
+                        <button onclick="filterDistance(20)" class="distance-btn" data-distance="20">20 km</button>
+                        <button onclick="filterDistance(50)" class="distance-btn" data-distance="50">50 km</button>
+                        <button onclick="filterDistance(100)" class="distance-btn" data-distance="100">100 km</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="donorCount" style="margin-bottom: 15px; color: #666; font-weight: 500;"></div>
+            
+            {% if donors %}
+            <div class="donors-grid">
+                {% for donor in donors %}
+                <div class="donor-card" data-blood-group="{{ donor['blood_group'] }}" data-distance="{{ donor['distance'] }}">
+                    <div class="donor-info">
+                        <h4>{{ donor['name'] }}</h4>
+                        <span class="blood-badge">{{ donor['blood_group'] }}</span>
+                        <span class="distance-badge">📍 {{ donor['distance'] }} km away</span>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Age:</span>
+                            <span class="info-value">{{ donor['age'] }} years</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span class="info-label">Contact:</span>
+                            <span class="info-value">{{ donor['contact'] }}</span>
+                        </div>
+                        
+                        {% if donor['last_donation_month'] %}
+                        <div class="info-row">
+                            <span class="info-label">Last Donation:</span>
+                            <span class="info-value">{{ donor['last_donation_month'] }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <form method="POST" action="/send_request">
+                        <input type="hidden" name="donor_id" value="{{ donor['id'] }}">
+                        <button type="submit" class="request-btn">Send Blood Request</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="no-donors">
+                <p>No donors available at the moment. Please check back later! 🙏</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        const donorCards = document.querySelectorAll('.donor-card');
+        const bloodGroupSearch = document.getElementById('bloodGroupSearch');
+        const distanceInput = document.getElementById('distanceInput');
+        const donorCountDisplay = document.getElementById('donorCount');
+
+        let currentBloodFilter = 'all';
+        let currentDistanceFilter = 999999;
+
+        function applyAllFilters() {
+            let visibleCount = 0;
+
+            donorCards.forEach(card => {
+                const bloodGroup = card.dataset.bloodGroup.toUpperCase();
+                const distance = parseFloat(card.dataset.distance);
+
+                const bloodMatch = (currentBloodFilter === 'all') || bloodGroup === currentBloodFilter || bloodGroup.startsWith(currentBloodFilter);
+                const distanceMatch = distance <= currentDistanceFilter;
+
+                if (bloodMatch && distanceMatch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            donorCountDisplay.textContent = `Showing ${visibleCount} of ${donorCards.length} available donors.`;
+        }
+
+        function filterBloodGroup(group) {
+            currentBloodFilter = group.toUpperCase();
+            bloodGroupSearch.value = '';
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.group === group || (btn.textContent.toUpperCase() === group));
+            });
+            
+            applyAllFilters();
+        }
+        
+        bloodGroupSearch.addEventListener('input', (e) => {
+            let searchTerm = e.target.value.toUpperCase();
+            currentBloodFilter = searchTerm;
+            applyAllFilters();
+        });
+
+        function filterDistance(maxDistance) {
+            currentDistanceFilter = maxDistance;
+            distanceInput.value = '';
+            
+            document.querySelectorAll('.distance-btn').forEach(btn => {
+                btn.classList.toggle('active', parseFloat(btn.dataset.distance) === maxDistance);
+            });
+            
+            applyAllFilters();
+        }
+        
+        function applyDistanceFilter() {
+            const distance = parseFloat(distanceInput.value);
+            if (!isNaN(distance) && distance > 0) {
+                filterDistance(distance);
+            } else if (distanceInput.value === '') {
+                filterDistance(999999);
+            }
+        }
+        
+        // Initial call to set the count
+        applyAllFilters();
+    </script>
+    </body>
+</html>
